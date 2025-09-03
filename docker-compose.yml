@@ -6,16 +6,18 @@ services:
     environment:
       - TZ=UTC
     volumes:
-      - anki_profile:/config/app
+      # Persist the full /config so the image's init provisions desktop/guacamole/session state durably
+      - anki_config:/config
     ports:
-      - "127.0.0.1:3000:3000"
-      - "127.0.0.1:8765:8765"
+      - "127.0.0.1:3000:3000"   # Desktop (Guacamole)
+      - "127.0.0.1:8765:8765"   # AnkiConnect (after Anki launches)
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8765 >/dev/null || exit 1"]
+      # Healthy if guacamole (:3000) is reachable, not checking if AnkiConnect is reachable yet
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:3000 >/dev/null || exit 1"]
       interval: 10s
       timeout: 3s
       retries: 15
       start_period: 30s
 
 volumes:
-  anki_profile:
+  anki_config:
