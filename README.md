@@ -222,3 +222,7 @@ docker exec anki-headless curl -s http://127.0.0.1:8765
 - STT → API → TTS workflows
 - Programmatic review and scheduling
 - LLM-assisted flashcard creation based on study progress
+
+### TODO (maybe)
+
+- Replace hard-coded Anki v2.1.54 from anki-desktop-docker, update AnkiConnect accordingly
