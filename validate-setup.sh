@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SERVICE="anki-headless"
-echo "AnkiBot: Validate AnkiWeb Cards API"
+SERVICE="anki-api-docker"
+echo "Anki API: Validate AnkiWeb Cards via API"
 echo "==================================="
 
 if ! docker compose ps | grep -q "Up"; then

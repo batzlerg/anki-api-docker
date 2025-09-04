@@ -1,26 +1,26 @@
-# AnkiBot
+# Anki API Docker
 
 Containerized solution for interacting with your Anki cards via API.
 
-## The Problem AnkiBot Solves
+## The Problem This Solves
 
 **"Why isn't there an API for my Anki cards?"**
 
-You have Anki cards and they sync to various devices via AnkiWeb, but there's no direct API to access them. The AnkiConnect add-on provides this, but it depends on your Anki Desktop installation as the persistence layer. This makes scripted interactions against your collection of cards difficult and prone to sync issues.
+You have Anki cards and they sync to various devices via AnkiWeb, but there's no public API to access them like other cloud services. The excellent AnkiConnect add-on provides API functionality, but it integrates with your Anki Desktop installation on whatever machine runs Anki, often your personal computer. This means you have to have your laptop running if you want to execute scripts against your data in the AnkiWeb cloud.
 
-AnkiBot containerizes everything - giving you a clean HTTP API for your existing AnkiWeb cards with minimal setup. You can host it on a home server and have a single source of truth for your scripts to interact with.
+Anki API Docker containerizes all of the necessary pieces and exposes AnkiConnect's clean HTTP API for AnkiWeb cards with minimal setup. You can self-host it and write scripts, MCP integrations, etc. against it.
 
 ## Requirements
 
 - Docker and Docker Compose
-- **Existing AnkiWeb account with cards** (primary use case)
+- **AnkiWeb account with cards** (primary use case)
 - 2GB+ RAM, 1GB+ disk space
 
 ## Quick Start
 
 ```
-git clone https://github.com/batzlerg/anki-bot anki-bot
-cd anki-bot
+git clone https://github.com/batzlerg/anki-api-docker anki-api-docker
+cd anki-api-docker
 chmod +x setup.sh
 ./setup.sh
 
@@ -41,12 +41,11 @@ chmod +x setup.sh
 ### Step 3: Test API
 ```
 ./validate-setup.sh
-
 ```
 
 ## Using Your AnkiWeb Cards API
 
-Working example with correct container networking:
+Run these commands from the terminal of whatever machine you installed Anki API onto:
 
 ```
 # List your decks
@@ -63,7 +62,6 @@ curl -X POST http://127.0.0.1:8765 -H 'Content-Type: application/json' \
 
 curl -X POST http://127.0.0.1:8765 -H 'Content-Type: application/json' \
 -d '{"action":"sync","version":6}'
-
 ```
 
 **Complete API documentation:** [AnkiConnect API Reference](https://foosoft.net/projects/anki-connect/)
@@ -71,16 +69,15 @@ curl -X POST http://127.0.0.1:8765 -H 'Content-Type: application/json' \
 ## Container Management
 
 ```
-
 docker compose down    # Stop
 docker compose up -d   # Start (auto-reconnects to AnkiWeb)
-docker compose restart anki-headless  # Restart if API stops responding
+docker compose restart anki-api-docker  # Restart if API stops responding
 
 ```
 
 ## Troubleshooting
 
-**API not responding:** `docker compose restart anki-headless`  
+**API not responding:** `docker compose restart anki-api-docker`  
 **Sync issues:** Re-authenticate via web UI  
 **Web UI access:** Use SSH tunnel for remote servers  
 

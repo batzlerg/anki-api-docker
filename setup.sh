@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SERVICE="anki-headless"
+SERVICE="anki-api-docker"
 ADDONS_ROOT="/config/app/Anki2/addons21"
 AC_ID="2055492159"
 AC_DIR="${ADDONS_ROOT}/${AC_ID}"
@@ -73,11 +73,16 @@ EOF
 echo
 echo "🎯 NEXT: Connect Your AnkiWeb Account"
 echo "===================================="
-echo "Local:  http://localhost:3000"
-echo "Remote: ssh -L 3000:127.0.0.1:3000 username@server-ip"
+echo "If this machine has a browser, visit:
+echo "http://localhost:3000"
 echo
-echo "1. Click 'Anki' → Select English → Click 'Sync'"
-echo "2. Enter AnkiWeb credentials → Close Anki window"
-echo "3. Test: ./validate-setup.sh"
+echo "If this machine DOES NOT have a browser, you will have to SSH tunnel to the UI:"
+echo "ssh -L 3000:\$SERVER_IP:3000 \$USERNAME@\$SERVER_IP"
 echo
-echo "Your AnkiWeb cards will be accessible at http://127.0.0.1:8765"
+echo "Once you see the Guacamole page load Anki Desktop:"
+echo "1. Select your desired language from the menu"
+echo "2. Ignore new version notifications unless you are confident it won't break things!"
+echo "3. Click 'Sync' and enter your AnkiWeb credentials. Download all cards to your device."
+echo "4. Test the API by running: ./validate-setup.sh"
+echo
+echo "Your AnkiWeb cards will be accessible at port 8765!"
