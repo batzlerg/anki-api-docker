@@ -47,42 +47,45 @@ echo "📥 Installing AnkiConnect..."
 docker exec "$SERVICE" bash -c "
   export DEBIAN_FRONTEND=noninteractive
   apt-get update -qq && apt-get install -y wget tar >/dev/null
-  
+
   mkdir -p '$ADDONS_ROOT' && chown -R abc:abc /config
-  
+
   TMP=\$(mktemp -d) && cd \$TMP
   wget -q '$RELEASE_URL' -O ac.tar.gz
   tar -xzf ac.tar.gz
-  
+
   # Find plugin root containing __init__.py
   PLUGIN_ROOT=\$(find . -name '__init__.py' -type f | head -1 | xargs dirname)
   [ -z \"\$PLUGIN_ROOT\" ] && { echo 'ERROR: Plugin not found'; exit 1; }
-  
+
   rm -rf '$AC_DIR' && mkdir -p '$AC_DIR'
-  cp -a \$PLUGIN_ROOT/* '$AC_DIR'/
-  
+  cp -a \$PLUGIN_ROOT/* '$AC_DIR'/ 
+
   # Configure for container networking
   cat > '$AC_DIR/config.json' << 'EOF'
 {\"apiKey\":null,\"webBindAddress\":\"0.0.0.0\",\"webBindPort\":8765,\"webCorsOriginList\":[\"http://localhost\",\"http://127.0.0.1\"]}
 EOF
-  
+
   rm -f '$AC_DIR/meta.json' && chown -R abc:abc '$ADDONS_ROOT'
   echo '✅ AnkiConnect configured'
 "
 
-echo
-echo "🎯 NEXT: Connect Your AnkiWeb Account"
-echo "===================================="
-echo "If this machine has a browser, visit:
-echo "http://localhost:3000"
-echo
-echo "If this machine DOES NOT have a browser, you will have to SSH tunnel to the UI:"
-echo "ssh -L 3000:\$SERVER_IP:3000 \$USERNAME@\$SERVER_IP"
-echo
-echo "Once you see the Guacamole page load Anki Desktop:"
-echo "1. Select your desired language from the menu"
-echo "2. Ignore new version notifications unless you are confident it won't break things!"
-echo "3. Click 'Sync' and enter your AnkiWeb credentials. Download all cards to your device."
-echo "4. Test the API by running: ./validate-setup.sh"
-echo
-echo "Your AnkiWeb cards will be accessible at port 8765!"
+cat <<'EOT'
+
+🎯 NEXT: Connect Your AnkiWeb Account
+====================================
+
+If this machine has a browser, visit:
+http://localhost:3000
+
+If this machine DOES NOT have a browser, you will have to SSH tunnel to the UI:
+ssh -L 3000:$SERVER_IP:3000 $USERNAME@$SERVER_IP
+
+Once you see the Guacamole page load Anki Desktop:
+1. Select your desired language from the menu
+2. Ignore new version notifications unless you are confident it won't break things!
+3. Click 'Sync' and enter your AnkiWeb credentials. Download all cards to your device.
+4. Test the API by running: ./validate-setup.sh
+
+Your AnkiWeb cards will be accessible at port 8765!
+EOT
